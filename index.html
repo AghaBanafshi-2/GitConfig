@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پنل مدیریت کانفیگ</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --panel-2: #334155;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --border: #475569;
+  --danger: #ef4444;
+  --success: #22c55e;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ---------- Login ---------- */
+#login-screen {
+  min-height: 100vh;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+}
+#login-screen.active { display: flex; }
+.login-box {
+  background: var(--panel);
+  padding: 40px 32px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.login-box .logo { font-size: 48px; margin-bottom: 12px; }
+.login-box h1 { font-size: 22px; margin-bottom: 6px; }
+.login-box .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+.login-box input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border 0.2s;
+}
+.login-box input:focus { border-color: var(--accent); }
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.login-box button:hover { background: var(--accent-hover); }
+.error-msg {
+  color: var(--danger);
+  font-size: 13px;
+  margin-top: 10px;
+  min-height: 18px;
+}
+
+/* ---------- Dashboard ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.brand { font-weight: 700; font-size: 17px; }
+.logout-btn {
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.logout-btn:hover { background: var(--danger); color: #fff; }
+
+.container { max-width: 1000px; margin: 0 auto; padding: 24px 16px; }
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  background: var(--panel);
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.toolbar label { font-size: 14px; color: var(--muted); }
+.toolbar select,
+.toolbar input,
+.toolbar button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+.toolbar input { flex: 1; min-width: 180px; }
+.toolbar button {
+  background: var(--accent);
+  border-color: var(--accent);
+  cursor: pointer;
+  font-weight: 600;
+}
+.toolbar button:hover { background: var(--accent-hover); }
+
+.status-bar {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  min-height: 18px;
+}
+.status-bar.error { color: var(--danger); }
+.status-bar.ok { color: var(--success); }
+
+.config-list { display: flex; flex-direction: column; gap: 10px; }
+.config-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  transition: border 0.2s;
+}
+.config-item:hover { border-color: var(--accent); }
+.config-index {
+  color: var(--muted);
+  font-size: 13px;
+  min-width: 32px;
+  font-family: monospace;
+}
+.config-text {
+  flex: 1;
+  font-family: monospace;
+  font-size: 12.5px;
+  word-break: break-all;
+  color: var(--text);
+  direction: ltr;
+  text-align: left;
+}
+.copy-btn {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.copy-btn:hover { background: var(--accent); border-color: var(--accent); }
+.copy-btn.copied { background: var(--success); border-color: var(--success); color: #fff; }
+.empty-state {
+  text-align: center;
+  color: var(--muted);
+  padding: 40px 16px;
+  font-size: 14px;
+}
+@media (max-width: 600px) {
+  .config-item { flex-wrap: wrap; }
+  .config-text { flex-basis: 100%; order: 3; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== صفحه ورود ===== -->
+<div id="login-screen" class="screen active">
+  <div class="login-box">
+    <div class="logo">🔐</div>
+    <h1>پنل مدیریت</h1>
+    <p class="subtitle">رمز عبور را وارد کنید</p>
+    <form id="login-form">
+      <input type="password" id="password-input" placeholder="رمز عبور" autocomplete="current-password" required>
+      <button type="submit">ورود</button>
+      <div id="login-error" class="error-msg"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== داشبورد ===== -->
+<div id="dashboard-screen" class="screen">
+  <header class="topbar">
+    <div class="brand">⚡ Config Panel</div>
+    <button id="logout-btn" class="logout-btn">خروج</button>
+  </header>
+
+  <main class="container">
+    <div class="toolbar">
+      <label for="country-select">کشور:</label>
+      <select id="country-select">
+        <option value="">-- انتخاب --</option>
+        <option value="NL">🇳🇱 هلند</option>
+        <option value="DE">🇩🇪 آلمان</option>
+        <option value="US">🇺🇸 آمریکا</option>
+        <option value="FR">🇫🇷 فرانسه</option>
+        <option value="TR">🇹🇷 ترکیه</option>
+      </select>
+      <button id="reload-btn">🔄 بارگذاری</button>
+      <input type="text" id="search-input" placeholder="جستجو در کانفیگ‌ها...">
+    </div>
+
+    <div id="status-bar" class="status-bar"></div>
+    <div id="config-list" class="config-list">
+      <div class="empty-state">برای شروع یک کشور انتخاب کنید</div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ================= تنظیمات =================
+const DEFAULT_PASSWORD = 'admin';   // 🔑 رمز پیش‌فرض را اینجا عوض کن
+const STORAGE_KEY = 'panel_auth';
+
+// ================= عناصر =================
+const loginScreen = document.getElementById('login-screen');
+const dashboardScreen = document.getElementById('dashboard-screen');
+const loginForm = document.getElementById('login-form');
+const passwordInput = document.getElementById('password-input');
+const loginError = document.getElementById('login-error');
+const logoutBtn = document.getElementById('logout-btn');
+const countrySelect = document.getElementById('country-select');
+const reloadBtn = document.getElementById('reload-btn');
+const searchInput = document.getElementById('search-input');
+const statusBar = document.getElementById('status-bar');
+const configList = document.getElementById('config-list');
+
+let allConfigs = [];
+
+// ================= احراز هویت =================
+function isLoggedIn() {
+  return sessionStorage.getItem(STORAGE_KEY) === '1';
+}
+function showScreen(name) {
+  loginScreen.classList.remove('active');
+  dashboardScreen.classList.remove('active');
+  if (name === 'login') loginScreen.classList.add('active');
+  else dashboardScreen.classList.add('active');
+}
+
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const pass = passwordInput.value;
+  if (pass === DEFAULT_PASSWORD) {
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    passwordInput.value = '';
+    loginError.textContent = '';
+    showScreen('dashboard');
+    if (countrySelect.value) loadConfigs(countrySelect.value);
+  } else {
+    loginError.textContent = 'رمز عبور اشتباه است';
+  }
+});
+
+logoutBtn.addEventListener('click', () => {
+  sessionStorage.removeItem(STORAGE_KEY);
+  showScreen('login');
+  allConfigs = [];
+  configList.innerHTML = '<div class="empty-state">برای شروع یک کشور انتخاب کنید</div>';
+  countrySelect.value = '';
+  searchInput.value = '';
+  statusBar.textContent = '';
+});
+
+// ================= بارگذاری کانفیگ‌ها =================
+async function loadConfigs(country) {
+  setStatus('در حال بارگذاری...');
+  configList.innerHTML = '';
+  allConfigs = [];
+
+  const fileName = `config-${country}.txt`;
+  try {
+    const res = await fetch(fileName, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`فایل ${fileName} پیدا نشد (کد ${res.status})`);
+    const text = await res.text();
+
+    allConfigs = text
+      .split(/\r?\n/)
+      .map(l => l.trim())
+      .filter(l => l.length > 0 && !l.startsWith('#'));
+
+    if (allConfigs.length === 0) {
+      setStatus('این فایل خالی است.', 'error');
+      configList.innerHTML = '<div class="empty-state">هیچ کانفیگی در فایل نیست</div>';
+      return;
+    }
+
+    setStatus(`✅ ${allConfigs.length} کانفیگ بارگذاری شد`, 'ok');
+    renderConfigs(allConfigs);
+  } catch (err) {
+    console.error(err);
+    setStatus('❌ ' + err.message, 'error');
+    configList.innerHTML = '<div class="empty-state">خطا در بارگذاری فایل</div>';
+  }
+}
+
+function setStatus(msg, type = '') {
+  statusBar.textContent = msg;
+  statusBar.className = 'status-bar' + (type ? ' ' + type : '');
+}
+
+// ================= رندر لیست =================
+function renderConfigs(configs) {
+  configList.innerHTML = '';
+  if (configs.length === 0) {
+    configList.innerHTML = '<div class="empty-state">نتیجه‌ای یافت نشد</div>';
+    return;
+  }
+
+  const fragment = document.createDocumentFragment();
+  configs.forEach((cfg, i) => {
+    const item = document.createElement('div');
+    item.className = 'config-item';
+
+    const idx = document.createElement('div');
+    idx.className = 'config-index';
+    idx.textContent = `#${i + 1}`;
+
+    const txt = document.createElement('div');
+    txt.className = 'config-text';
+    txt.textContent = cfg;
+
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = '📋 کپی';
+    btn.addEventListener('click', () => copyConfig(cfg, btn));
+
+    item.appendChild(idx);
+    item.appendChild(txt);
+    item.appendChild(btn);
+    fragment.appendChild(item);
+  });
+  configList.appendChild(fragment);
+}
+
+// ================= کپی =================
+async function copyConfig(text, btn) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      // fallback برای http یا مرورگرهای قدیمی
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    const original = btn.textContent;
+    btn.textContent = '✅ کپی شد';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove('copied');
+    }, 1500);
+  } catch (e) {
+    btn.textContent = '❌ خطا';
+    setTimeout(() => (btn.textContent = '📋 کپی'), 1500);
+  }
+}
+
+// ================= رویدادها =================
+countrySelect.addEventListener('change', () => {
+  if (countrySelect.value) loadConfigs(countrySelect.value);
+});
+
+reloadBtn.addEventListener('click', () => {
+  if (countrySelect.value) loadConfigs(countrySelect.value);
+  else setStatus('اول یک کشور انتخاب کن', 'error');
+});
+
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.trim().toLowerCase();
+  if (!q) { renderConfigs(allConfigs); return; }
+  const filtered = allConfigs.filter(c => c.toLowerCase().includes(q));
+  renderConfigs(filtered);
+});
+
+// ================= شروع =================
+if (isLoggedIn()) {
+  showScreen('dashboard');
+  if (countrySelect.value) loadConfigs(countrySelect.value);
+} else {
+  showScreen('login');
+}
+</script>
+</body>
+</html>
