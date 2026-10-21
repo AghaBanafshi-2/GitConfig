@@ -5,450 +5,156 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>3X-UI Panel</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #0b1220;
-  --sidebar: #111a2e;
-  --panel: #16213a;
-  --panel-2: #1e2b48;
-  --accent: #2f6bff;
-  --accent-hover: #1f56e0;
-  --text: #e6edf7;
-  --muted: #8595b0;
-  --border: #24344f;
-  --danger: #ef4444;
-  --success: #22c55e;
-  --warn: #f59e0b;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--sidebar:#161b22;--card:#161b22;--card2:#1c2128;
+  --accent:#2f81f7;--accent2:#1f6feb;--text:#c9d1d9;--muted:#8b949e;
+  --border:#30363d;--danger:#f85149;--success:#3fb950;--warn:#d29922;
+  --purple:#a371f7;--cyan:#39c5cf;
 }
-body {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-.screen { display: none; }
-.screen.active { display: block; }
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;overflow-x:hidden}
+.screen{display:none}.screen.active{display:block}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
-/* ================= LOGIN ================= */
-#login-screen {
-  min-height: 100vh;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle at top, #16213a 0%, #0b1220 70%);
-}
-#login-screen.active { display: flex; }
-.login-box {
-  background: var(--panel);
-  padding: 38px 32px;
-  border-radius: 14px;
-  width: 100%;
-  max-width: 380px;
-  border: 1px solid var(--border);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-  text-align: center;
-}
-.login-box .logo {
-  font-size: 42px;
-  margin-bottom: 8px;
-  filter: drop-shadow(0 0 12px var(--accent));
-}
-.login-box h1 { font-size: 20px; margin-bottom: 4px; letter-spacing: 0.5px; }
-.login-box .subtitle { color: var(--muted); font-size: 12.5px; margin-bottom: 26px; }
-.login-box input {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  font-size: 14px;
-  margin-bottom: 12px;
-  outline: none;
-  transition: border 0.2s, box-shadow 0.2s;
-}
-.login-box input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(47,107,255,0.15);
-}
-.login-box button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 14.5px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.login-box button:hover { background: var(--accent-hover); }
-.error-msg {
-  color: var(--danger);
-  font-size: 12.5px;
-  margin-top: 10px;
-  min-height: 16px;
-}
+/* ============ LOGIN ============ */
+#login-screen{min-height:100vh;display:none;align-items:center;justify-content:center;background:var(--bg)}
+#login-screen.active{display:flex}
+.login-wrap{width:100%;max-width:360px;padding:20px}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo .icon{font-size:40px;display:block;margin-bottom:8px}
+.login-logo h1{font-size:20px;font-weight:600;color:#fff}
+.login-logo p{color:var(--muted);font-size:12px;margin-top:4px}
+.login-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px}
+.login-card label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+.login-card input{width:100%;padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:14px;outline:none;margin-bottom:14px;transition:border .15s}
+.login-card input:focus{border-color:var(--accent)}
+.login-card button{width:100%;padding:10px;background:var(--accent2);border:none;border-radius:6px;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.login-card button:hover{background:var(--accent)}
+.login-err{color:var(--danger);font-size:12px;margin-top:10px;min-height:16px;text-align:center}
 
-/* ================= LAYOUT ================= */
-.app-layout {
-  display: flex;
-  min-height: 100vh;
-}
+/* ============ LAYOUT ============ */
+.layout{display:flex;min-height:100vh}
+.sidebar{width:200px;background:var(--sidebar);border-left:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;transition:width .2s}
+.sidebar.collapsed{width:56px}
+.sidebar.collapsed .sb-text{display:none}
+.sidebar.collapsed .sb-logo span{display:none}
+.sidebar.collapsed .nav-item{justify-content:center;padding:10px 0}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:16px 14px;border-bottom:1px solid var(--border);font-weight:700;font-size:15px;color:#fff;white-space:nowrap;overflow:hidden}
+.sb-logo .dot{width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 6px var(--success);flex-shrink:0}
+.sb-nav{flex:1;padding:8px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;color:var(--muted);font-size:13px;cursor:pointer;margin-bottom:2px;white-space:nowrap;transition:all .12s}
+.nav-item:hover{background:var(--card2);color:var(--text)}
+.nav-item.active{background:rgba(47,129,247,.15);color:var(--accent)}
+.nav-item .ico{width:18px;text-align:center;flex-shrink:0}
+.sb-bottom{padding:8px;border-top:1px solid var(--border)}
+.sb-bottom button{width:100%;padding:8px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.sb-bottom button:hover{border-color:var(--danger);color:var(--danger)}
+.main{flex:1;padding:16px 20px;overflow-x:hidden}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.topbar h2{font-size:18px;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px}
+.topbar .actions{display:flex;gap:8px;flex-wrap:wrap}
 
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  background: var(--sidebar);
-  border-left: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  padding: 18px 12px;
-  flex-shrink: 0;
-}
-.sidebar .brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 700;
-  font-size: 15px;
-  padding: 6px 8px 18px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 14px;
-}
-.sidebar .brand .dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--success);
-  box-shadow: 0 0 8px var(--success);
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%,100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  color: var(--muted);
-  font-size: 13.5px;
-  cursor: pointer;
-  transition: all 0.15s;
-  margin-bottom: 4px;
-  border: 1px solid transparent;
-}
-.nav-item:hover { background: var(--panel-2); color: var(--text); }
-.nav-item.active {
-  background: rgba(47,107,255,0.12);
-  color: var(--accent);
-  border-color: rgba(47,107,255,0.3);
-}
-.sidebar .spacer { flex: 1; }
-.sidebar .logout-btn {
-  background: transparent;
-  border: 1px solid var(--danger);
-  color: var(--danger);
-  padding: 9px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.2s;
-}
-.sidebar .logout-btn:hover { background: var(--danger); color: #fff; }
+/* ============ BUTTONS ============ */
+.btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .12s;white-space:nowrap}
+.btn:hover{background:var(--border)}
+.btn.primary{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.btn.primary:hover{background:var(--accent)}
+.btn.danger{color:var(--danger);border-color:rgba(248,81,73,.4)}
+.btn.danger:hover{background:rgba(248,81,73,.1)}
+.btn.sm{padding:3px 8px;font-size:11.5px}
+.btn.icon{padding:5px 8px;font-size:13px}
 
-/* Main */
-.main {
-  flex: 1;
-  padding: 22px 26px;
-  overflow-x: hidden;
-}
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.page-header h2 { font-size: 19px; }
-.page-header .sub { color: var(--muted); font-size: 12.5px; margin-top: 3px; }
+/* ============ STATS ============ */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.stat .lbl{font-size:11px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
+.stat .val{font-size:20px;font-weight:700;font-family:monospace}
+.stat .val.green{color:var(--success)}
+.stat .val.blue{color:var(--accent)}
+.stat .val.purple{color:var(--purple)}
 
-/* Stats */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
-  margin-bottom: 20px;
-}
-.stat-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 16px;
-}
-.stat-card .label { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
-.stat-card .value { font-size: 20px; font-weight: 700; font-family: monospace; }
-.stat-card .value.online { color: var(--success); }
-.stat-card .value.accent { color: var(--accent); }
+/* ============ TABLE ============ */
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.table-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.table-header h3{font-size:14px;font-weight:600;color:#fff}
+.search-box{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 10px}
+.search-box input{background:none;border:none;color:var(--text);font-size:12.5px;outline:none;width:160px}
+.search-box .ico{color:var(--muted);font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{text-align:right;padding:10px 14px;color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--border);background:var(--card2);white-space:nowrap}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+.proto-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10.5px;font-weight:600;font-family:monospace}
+.proto-badge.vless{background:rgba(163,113,247,.15);color:var(--purple)}
+.proto-badge.vmess{background:rgba(57,197,207,.15);color:var(--cyan)}
+.proto-badge.trojan{background:rgba(210,153,34,.15);color:var(--warn)}
+.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:4px}
+.status-dot.on{background:var(--success);box-shadow:0 0 4px var(--success)}
+.status-dot.off{background:var(--muted)}
+.row-actions{display:flex;gap:4px}
+.empty-row{text-align:center;color:var(--muted);padding:32px 16px;font-size:13px}
 
-/* Section */
-.section {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 18px;
-  margin-bottom: 18px;
-}
-.section-title {
-  font-size: 14.5px;
-  font-weight: 600;
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.section-title::before {
-  content: '';
-  width: 3px; height: 14px;
-  background: var(--accent);
-  border-radius: 2px;
-}
+/* ============ MODAL ============ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:flex-start;justify-content:center;z-index:100;padding:40px 16px;overflow-y:auto}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:10px;width:100%;max-width:640px;box-shadow:0 20px 50px rgba(0,0,0,.6)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)}
+.modal-head h3{font-size:15px;font-weight:600;color:#fff}
+.modal-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;padding:0 4px}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:16px 18px;max-height:65vh;overflow-y:auto}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:1px solid var(--border)}
+
+/* Tabs */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.tab{padding:8px 16px;font-size:12.5px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-content{display:none}.tab-content.active{display:block}
 
 /* Form */
-.form-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-  margin-bottom: 14px;
-}
-.field { display: flex; flex-direction: column; gap: 6px; }
-.field label { font-size: 12.5px; color: var(--muted); }
-.field input, .field select {
-  padding: 9px 11px;
-  border-radius: 7px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  font-size: 13.5px;
-  outline: none;
-  transition: border 0.2s;
-}
-.field input:focus, .field select:focus { border-color: var(--accent); }
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid .full{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:11.5px;color:var(--muted);font-weight:500}
+.field input,.field select,.field textarea{padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12.5px;outline:none;font-family:inherit}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+.field textarea{resize:vertical;min-height:80px;font-family:monospace;font-size:11.5px;direction:ltr;text-align:left}
+.field .hint{font-size:10.5px;color:var(--muted);margin-top:2px}
 
-.btn {
-  padding: 9px 18px;
-  border-radius: 7px;
-  border: none;
-  background: var(--accent);
-  color: #fff;
-  font-size: 13.5px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.btn:hover { background: var(--accent-hover); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn.ghost {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
-}
-.btn.ghost:hover { background: var(--panel-2); }
-.btn.danger {
-  background: transparent;
-  border: 1px solid var(--danger);
-  color: var(--danger);
-}
-.btn.danger:hover { background: var(--danger); color: #fff; }
-
-/* Inbound List */
-.inbound-item {
-  background: var(--panel-2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px;
-  margin-bottom: 10px;
-  animation: fadeIn 0.3s;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.inbound-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.inbound-title {
-  font-weight: 600;
-  font-size: 13.5px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.badge {
-  font-size: 10.5px;
-  padding: 3px 8px;
-  border-radius: 20px;
-  font-weight: 600;
-}
-.badge.active { background: rgba(34,197,94,0.15); color: var(--success); }
-.badge.inactive { background: rgba(133,149,176,0.15); color: var(--muted); }
-.inbound-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 10px;
-}
-.inbound-meta span b { color: var(--text); font-family: monospace; }
-.inbound-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.inbound-actions button {
-  padding: 6px 12px;
-  font-size: 12px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.inbound-actions button:hover { border-color: var(--accent); color: var(--accent); }
-
-/* Config output */
-.config-output {
-  margin-top: 10px;
-  background: var(--bg);
-  border: 1px dashed var(--border);
-  border-radius: 8px;
-  padding: 12px;
-  display: none;
-}
-.config-output.show { display: block; animation: fadeIn 0.25s; }
-.config-output .row {
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
-  margin-bottom: 8px;
-}
-.config-output .row:last-child { margin-bottom: 0; }
-.config-output code {
-  flex: 1;
-  font-family: monospace;
-  font-size: 11.5px;
-  word-break: break-all;
-  direction: ltr;
-  text-align: left;
-  background: var(--panel);
-  padding: 8px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  color: #7dd3fc;
-}
-.config-output .mini-btn {
-  padding: 7px 10px;
-  font-size: 11.5px;
-  border-radius: 6px;
-  border: 1px solid var(--accent);
-  background: rgba(47,107,255,0.1);
-  color: var(--accent);
-  cursor: pointer;
-  white-space: nowrap;
-}
-.config-output .mini-btn:hover { background: var(--accent); color: #fff; }
-
-/* Log */
-.log-box {
-  background: #060b14;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px;
-  font-family: monospace;
-  font-size: 11.5px;
-  max-height: 220px;
-  overflow-y: auto;
-  direction: ltr;
-  text-align: left;
-}
-.log-line { padding: 2px 0; color: var(--muted); }
-.log-line.info { color: #7dd3fc; }
-.log-line.success { color: var(--success); }
-.log-line.error { color: var(--danger); }
-.log-line.warn { color: var(--warn); }
-.log-line .time { color: #4b5c7a; margin-right: 8px; }
+/* QR & Config box */
+.config-box{margin-top:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px}
+.config-box .line{display:flex;gap:6px;align-items:flex-start;margin-bottom:8px}
+.config-box .line:last-child{margin-bottom:0}
+.config-box code{flex:1;font-family:monospace;font-size:11px;word-break:break-all;direction:ltr;text-align:left;background:var(--card2);padding:6px 8px;border-radius:4px;border:1px solid var(--border);color:var(--cyan);max-height:80px;overflow-y:auto}
+.config-box .copy-mini{padding:5px 10px;font-size:11px;border-radius:4px;border:1px solid var(--accent);background:rgba(47,129,247,.1);color:var(--accent);cursor:pointer;white-space:nowrap}
+.config-box .copy-mini:hover{background:var(--accent);color:#fff}
+.qr-wrap{text-align:center;padding:16px}
+.qr-wrap canvas{background:#fff;padding:8px;border-radius:8px;max-width:200px;height:auto}
+.qr-wrap p{font-size:11px;color:var(--muted);margin-top:8px}
 
 /* Toast */
-#toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: var(--panel-2);
-  border: 1px solid var(--accent);
-  color: var(--text);
-  padding: 11px 22px;
-  border-radius: 8px;
-  font-size: 13px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  opacity: 0;
-  transition: all 0.3s;
-  z-index: 1000;
-  pointer-events: none;
-}
-#toast.show {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
-}
-
-/* Empty */
-.empty-state {
-  text-align: center;
-  color: var(--muted);
-  padding: 36px 16px;
-  font-size: 13.5px;
-}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--card2);border:1px solid var(--accent);color:var(--text);padding:10px 20px;border-radius:8px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.5);opacity:0;transition:all .25s;z-index:200;pointer-events:none}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
 /* Page */
-.page { display: none; }
-.page.active { display: block; }
+.page{display:none}.page.active{display:block}
 
-/* Loading spinner */
-.spinner {
-  display: inline-block;
-  width: 14px; height: 14px;
-  border: 2px solid rgba(255,255,255,0.2);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  vertical-align: middle;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+/* Log */
+.log-box{background:#05080f;border:1px solid var(--border);border-radius:8px;padding:12px;font-family:monospace;font-size:11.5px;max-height:400px;overflow-y:auto;direction:ltr;text-align:left}
+.log-line{padding:2px 0;color:var(--muted)}
+.log-line .t{color:#4b5c7a;margin-right:8px}
+.log-line.info{color:var(--cyan)}.log-line.ok{color:var(--success)}.log-line.err{color:var(--danger)}
 
-@media (max-width: 768px) {
-  .app-layout { flex-direction: column; }
-  .sidebar {
-    width: 100%;
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 10px;
-    border-left: none;
-    border-bottom: 1px solid var(--border);
-  }
-  .sidebar .brand { border: none; padding: 8px; margin: 0; font-size: 13px; }
-  .nav-item { white-space: nowrap; margin: 0 2px; }
-  .sidebar .spacer, .sidebar .logout-btn { display: none; }
-  .main { padding: 14px; }
+@media(max-width:768px){
+  .sidebar{width:56px}.sidebar .sb-text,.sidebar .sb-logo span{display:none}.sidebar .nav-item{justify-content:center;padding:10px 0}
+  .sidebar .sb-bottom button span{display:none}
+  .main{padding:12px}
+  .form-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  table{font-size:11px}thead th,tbody td{padding:8px 10px}
 }
 </style>
 </head>
@@ -456,183 +162,242 @@ body {
 
 <!-- ================= LOGIN ================= -->
 <div id="login-screen" class="screen active">
-  <div class="login-box">
-    <div class="logo">🛡️</div>
-    <h1>3X-UI Panel</h1>
-    <p class="subtitle">ورود به پنل مدیریت</p>
-    <form id="login-form">
-      <input type="text" id="username-input" placeholder="نام کاربری" value="admin" autocomplete="username" required>
-      <input type="password" id="password-input" placeholder="رمز عبور" autocomplete="current-password" required>
-      <button type="submit">ورود</button>
-      <div id="login-error" class="error-msg"></div>
-    </form>
+  <div class="login-wrap">
+    <div class="login-logo">
+      <span class="icon">🛡️</span>
+      <h1>3X-UI</h1>
+      <p>Xray Panel</p>
+    </div>
+    <div class="login-card">
+      <form id="login-form">
+        <label>Username</label>
+        <input type="text" id="login-user" value="admin" autocomplete="username" required>
+        <label>Password</label>
+        <input type="password" id="login-pass" autocomplete="current-password" required>
+        <button type="submit">Login</button>
+        <div class="login-err" id="login-err"></div>
+      </form>
+    </div>
   </div>
 </div>
 
 <!-- ================= DASHBOARD ================= -->
 <div id="dashboard-screen" class="screen">
-  <div class="app-layout">
+<div class="layout">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="brand">
-        <span class="dot"></span>
-        <span>3X-UI</span>
-      </div>
-      <div class="nav-item active" data-page="inbounds">📡 اینباندها</div>
-      <div class="nav-item" data-page="settings">⚙️ تنظیمات</div>
-      <div class="nav-item" data-page="logs">📋 لاگ‌ها</div>
-      <div class="spacer"></div>
-      <button class="logout-btn" id="logout-btn">خروج</button>
-    </aside>
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo"><span class="dot"></span><span class="sb-text">3X-UI</span></div>
+    <nav class="sb-nav">
+      <div class="nav-item active" data-page="inbounds"><span class="ico">📡</span><span class="sb-text">Inbounds</span></div>
+      <div class="nav-item" data-page="settings"><span class="ico">⚙️</span><span class="sb-text">Settings</span></div>
+      <div class="nav-item" data-page="logs"><span class="ico">📋</span><span class="sb-text">Logs</span></div>
+    </nav>
+    <div class="sb-bottom">
+      <button id="logout-btn"><span class="ico">🚪</span><span class="sb-text">Logout</span></button>
+    </div>
+  </aside>
 
-    <!-- Main -->
-    <main class="main">
+  <main class="main">
 
-      <!-- Page: Inbounds -->
-      <div class="page active" id="page-inbounds">
-        <div class="page-header">
-          <div>
-            <h2>مدیریت اینباندها</h2>
-            <div class="sub">ساخت و مدیریت کانفیگ‌های اتصال</div>
-          </div>
-        </div>
-
-        <!-- Stats -->
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="label">وضعیت پنل</div>
-            <div class="value online">آنلاین</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">کاربران فعال</div>
-            <div class="value accent" id="stat-active">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">کل کانفیگ‌ها</div>
-            <div class="value" id="stat-total">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">پهنای باند امروز</div>
-            <div class="value" id="stat-bw">0 GB</div>
-          </div>
-        </div>
-
-        <!-- New Inbound -->
-        <div class="section">
-          <div class="section-title">ساخت اینباند جدید</div>
-          <form id="inbound-form">
-            <div class="form-row">
-              <div class="field">
-                <label>نام اینباند</label>
-                <input type="text" id="f-remark" placeholder="مثال: user-01" required>
-              </div>
-              <div class="field">
-                <label>پروتکل</label>
-                <select id="f-protocol">
-                  <option value="vless">VLESS</option>
-                  <option value="vmess">VMess</option>
-                  <option value="trojan">Trojan</option>
-                </select>
-              </div>
-              <div class="field">
-                <label>پورت</label>
-                <input type="number" id="f-port" value="443" min="1" max="65535" required>
-              </div>
-              <div class="field">
-                <label>حجم (GB)</label>
-                <input type="number" id="f-volume" value="0" min="0" step="1">
-              </div>
-              <div class="field">
-                <label>مدت (روز)</label>
-                <input type="number" id="f-days" value="0" min="0" step="1">
-              </div>
-            </div>
-            <button type="submit" class="btn" id="create-btn">➕ ساخت اینباند</button>
-          </form>
-        </div>
-
-        <!-- Inbound List -->
-        <div class="section">
-          <div class="section-title">اینباندهای موجود</div>
-          <div id="inbound-list">
-            <div class="empty-state">هنوز اینباندی ساخته نشده است</div>
-          </div>
+    <!-- ===== PAGE: INBOUNDS ===== -->
+    <div class="page active" id="page-inbounds">
+      <div class="topbar">
+        <h2>📡 Inbounds</h2>
+        <div class="actions">
+          <button class="btn primary" id="open-add-modal">+ Add Inbound</button>
+          <button class="btn" id="reload-btn">🔄 Reload</button>
         </div>
       </div>
 
-      <!-- Page: Settings -->
-      <div class="page" id="page-settings">
-        <div class="page-header">
-          <div>
-            <h2>تنظیمات پنل</h2>
-            <div class="sub">پیکربندی اتصال به سرویس‌دهنده</div>
+      <div class="stats">
+        <div class="stat"><div class="lbl">Status</div><div class="val green" id="s-status">Online</div></div>
+        <div class="stat"><div class="lbl">Active</div><div class="val blue" id="s-active">0</div></div>
+        <div class="stat"><div class="lbl">Total</div><div class="val" id="s-total">0</div></div>
+        <div class="stat"><div class="lbl">Traffic</div><div class="val purple" id="s-traffic">0 GB</div></div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-header">
+          <h3>Inbound List</h3>
+          <div class="search-box"><span class="ico">🔍</span><input type="text" id="search-input" placeholder="Search..."></div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Remark</th><th>Protocol</th><th>Port</th><th>Traffic</th><th>Expiry</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inbound-tbody">
+            <tr><td colspan="7" class="empty-row">No inbounds yet. Click "+ Add Inbound" to create one.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: SETTINGS ===== -->
+    <div class="page" id="page-settings">
+      <div class="topbar"><h2>⚙️ Settings</h2></div>
+      <div class="table-wrap" style="padding:16px">
+        <div class="form-grid">
+          <div class="field full">
+            <label>Config Source File</label>
+            <input type="text" value="config-NL.txt" readonly>
+            <div class="hint">The panel reads all configs from this file. Each line = one config link.</div>
+          </div>
+          <div class="field">
+            <label>Loaded Configs</label>
+            <input type="text" id="setting-count" value="0" readonly>
+          </div>
+          <div class="field">
+            <label>Source Status</label>
+            <input type="text" id="setting-status" value="Waiting" readonly>
           </div>
         </div>
-        <div class="section">
-          <div class="section-title">منبع کانفیگ</div>
-          <div class="form-row">
-            <div class="field">
-              <label>فایل کانفیگ</label>
-              <input type="text" value="config-NL.txt" readonly>
-            </div>
-            <div class="field">
-              <label>حالت بارگذاری</label>
-              <input type="text" value="خودکار" readonly>
-            </div>
+        <div style="margin-top:16px">
+          <button class="btn" id="reload-source-btn">🔄 Reload Source</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: LOGS ===== -->
+    <div class="page" id="page-logs">
+      <div class="topbar">
+        <h2>📋 Logs</h2>
+        <button class="btn" id="clear-logs-btn">Clear</button>
+      </div>
+      <div class="log-box" id="log-box"></div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<!-- ================= MODAL: ADD INBOUND ================= -->
+<div class="modal-overlay" id="add-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Add Inbound</h3>
+      <button class="modal-close" id="close-add-modal">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs">
+        <div class="tab active" data-tab="basic">Basic</div>
+        <div class="tab" data-tab="stream">Stream</div>
+        <div class="tab" data-tab="sniff">Sniffing</div>
+      </div>
+
+      <!-- Tab: Basic -->
+      <div class="tab-content active" id="tab-basic">
+        <div class="form-grid">
+          <div class="field full">
+            <label>Remark</label>
+            <input type="text" id="f-remark" placeholder="e.g. user-01" required>
           </div>
-          <div class="inbound-meta">
-            <span>وضعیت: <b id="source-status">در انتظار</b></span>
-            <span>تعداد: <b id="source-count">0</b></span>
+          <div class="field">
+            <label>Protocol</label>
+            <select id="f-protocol">
+              <option value="vless">VLESS</option>
+              <option value="vmess">VMess</option>
+              <option value="trojan">Trojan</option>
+            </select>
           </div>
-          <button class="btn ghost" id="reload-source">🔄 بارگذاری مجدد</button>
+          <div class="field">
+            <label>Port</label>
+            <input type="number" id="f-port" value="443" min="1" max="65535">
+          </div>
+          <div class="field">
+            <label>Total Traffic (GB)</label>
+            <input type="number" id="f-traffic" value="0" min="0">
+            <div class="hint">0 = unlimited</div>
+          </div>
+          <div class="field">
+            <label>Expiry (Days)</label>
+            <input type="number" id="f-days" value="0" min="0">
+            <div class="hint">0 = never expires</div>
+          </div>
         </div>
       </div>
 
-      <!-- Page: Logs -->
-      <div class="page" id="page-logs">
-        <div class="page-header">
-          <div>
-            <h2>لاگ‌های سیستم</h2>
-            <div class="sub">رویدادهای زنده پنل</div>
+      <!-- Tab: Stream -->
+      <div class="tab-content" id="tab-stream">
+        <div class="form-grid">
+          <div class="field">
+            <label>Network</label>
+            <select id="f-network"><option value="tcp">TCP</option><option value="ws">WebSocket</option><option value="grpc">gRPC</option></select>
           </div>
-          <button class="btn ghost" id="clear-logs">پاک کردن</button>
-        </div>
-        <div class="section">
-          <div class="log-box" id="log-box"></div>
+          <div class="field">
+            <label>Security</label>
+            <select id="f-security"><option value="tls">TLS</option><option value="reality">Reality</option><option value="none">None</option></select>
+          </div>
+          <div class="field full">
+            <label>SNI / Server Name</label>
+            <input type="text" id="f-sni" value="www.cloudflare.com">
+          </div>
         </div>
       </div>
 
-    </main>
+      <!-- Tab: Sniffing -->
+      <div class="tab-content" id="tab-sniff">
+        <div class="form-grid">
+          <div class="field full">
+            <label>Dest Override</label>
+            <select id="f-sniff"><option value="http,tls,quic,fakedns">http, tls, quic, fakedns</option><option value="http,tls">http, tls</option><option value="none">None</option></select>
+          </div>
+        </div>
+        <p style="font-size:11.5px;color:var(--muted);margin-top:10px">Enable sniffing to route traffic based on the actual destination domain.</p>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="cancel-add">Cancel</button>
+      <button class="btn primary" id="submit-add">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL: CONFIG / QR ================= -->
+<div class="modal-overlay" id="config-modal">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-head">
+      <h3 id="config-modal-title">Config</h3>
+      <button class="modal-close" id="close-config-modal">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="config-box" id="config-box"></div>
+      <div class="qr-wrap">
+        <canvas id="qr-canvas" width="200" height="200"></canvas>
+        <p>Scan with your client</p>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="close-config-btn">Close</button>
+    </div>
   </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-// ============ تنظیمات ============
+// ================= CONFIG =================
 const DEFAULT_USER = 'admin';
 const DEFAULT_PASS = 'admin';
-const STORAGE_KEY = 'panel_auth';
-const CONFIG_FILE = 'config-NL.txt';   // 👈 همیشه از این فایل خوانده می‌شود
+const STORAGE_KEY = 'xui_auth';
+const CONFIG_FILE = 'config-NL.txt';   // 👈 always reads from this file
 
-// ============ State ============
-let configs = [];          // کانفیگ‌های خام از فایل
-let inbounds = [];         // اینباندهای ساخته‌شده
-let configPool = [];       // کانفیگ‌های آماده مصرف
+// ================= STATE =================
+let configs = [];        // raw configs from file
+let configPool = [];     // available configs
+let inbounds = [];       // created inbounds
 
-// ============ DOM ============
+// ================= DOM =================
 const $ = id => document.getElementById(id);
 const loginScreen = $('login-screen');
 const dashboardScreen = $('dashboard-screen');
 const loginForm = $('login-form');
-const loginError = $('login-error');
-const inboundForm = $('inbound-form');
-const inboundList = $('inbound-list');
+const loginErr = $('login-err');
 const logBox = $('log-box');
 const toast = $('toast');
 
-// ============ Auth ============
+// ================= AUTH =================
 function isLoggedIn() { return sessionStorage.getItem(STORAGE_KEY) === '1'; }
 
 function showScreen(name) {
@@ -644,26 +409,26 @@ function showScreen(name) {
 
 loginForm.addEventListener('submit', e => {
   e.preventDefault();
-  const u = $('username-input').value.trim();
-  const p = $('password-input').value;
+  const u = $('login-user').value.trim();
+  const p = $('login-pass').value;
   if (u === DEFAULT_USER && p === DEFAULT_PASS) {
     sessionStorage.setItem(STORAGE_KEY, '1');
-    loginError.textContent = '';
+    loginErr.textContent = '';
     showScreen('dashboard');
-    initPanel();
+    init();
   } else {
-    loginError.textContent = 'نام کاربری یا رمز عبور اشتباه است';
-    addLog('error', 'تلاش ناموفق برای ورود');
+    loginErr.textContent = 'Invalid username or password';
+    addLog('err', 'Login failed for user: ' + u);
   }
 });
 
 $('logout-btn').addEventListener('click', () => {
   sessionStorage.removeItem(STORAGE_KEY);
   showScreen('login');
-  addLog('info', 'کاربر خارج شد');
+  addLog('info', 'User logged out');
 });
 
-// ============ Navigation ============
+// ================= NAV =================
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -674,263 +439,326 @@ document.querySelectorAll('.nav-item').forEach(item => {
   });
 });
 
-// ============ Log ============
+// ================= LOG =================
 function addLog(type, msg) {
-  const time = new Date().toLocaleTimeString('en-GB');
+  const t = new Date().toLocaleTimeString('en-GB');
   const line = document.createElement('div');
   line.className = 'log-line ' + type;
-  line.innerHTML = `<span class="time">[${time}]</span>${msg}`;
+  line.innerHTML = `<span class="t">[${t}]</span>${msg}`;
   logBox.appendChild(line);
   logBox.scrollTop = logBox.scrollHeight;
-  while (logBox.children.length > 200) logBox.removeChild(logBox.firstChild);
+  while (logBox.children.length > 300) logBox.removeChild(logBox.firstChild);
 }
+$('clear-logs-btn').addEventListener('click', () => { logBox.innerHTML = ''; addLog('info', 'Logs cleared'); });
 
-$('clear-logs').addEventListener('click', () => {
-  logBox.innerHTML = '';
-  addLog('info', 'لاگ‌ها پاک شدند');
-});
-
-// ============ Toast ============
+// ================= TOAST =================
 let toastTimer;
 function showToast(msg) {
   toast.textContent = msg;
   toast.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
-// ============ Load Configs ============
+// ================= LOAD CONFIGS =================
 async function loadConfigs() {
-  addLog('info', `دریافت کانفیگ از ${CONFIG_FILE}...`);
-  $('source-status').textContent = 'در حال بارگذاری';
+  addLog('info', `Fetching ${CONFIG_FILE}...`);
+  $('setting-status').value = 'Loading';
   try {
     const res = await fetch(CONFIG_FILE + '?t=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const text = await res.text();
-    configs = text
-      .split(/\r?\n/)
-      .map(l => l.trim())
-      .filter(l => l && !l.startsWith('#'));
+    configs = text.split(/\r?\n/).map(l => l.trim()).filter(l => l && !l.startsWith('#'));
     configPool = [...configs];
-    if (configs.length === 0) throw new Error('فایل خالی است');
-    addLog('success', `${configs.length} کانفیگ با موفقیت بارگذاری شد`);
-    $('source-status').textContent = 'آماده';
-    $('source-count').textContent = configs.length;
+    if (configs.length === 0) throw new Error('File is empty');
+    addLog('ok', `${configs.length} configs loaded from ${CONFIG_FILE}`);
+    $('setting-status').value = 'Ready';
+    $('setting-count').value = configs.length;
     updateStats();
   } catch (err) {
-    addLog('error', 'خطا در بارگذاری: ' + err.message);
-    $('source-status').textContent = 'خطا';
-    $('source-count').textContent = '0';
-    showToast('خطا در دریافت کانفیگ‌ها');
+    addLog('err', 'Load failed: ' + err.message);
+    $('setting-status').value = 'Error';
+    $('setting-count').value = '0';
+    showToast('Failed to load configs');
   }
 }
 
-// ============ Create Inbound ============
-inboundForm.addEventListener('submit', async e => {
-  e.preventDefault();
-  const btn = $('create-btn');
+$('reload-source-btn').addEventListener('click', loadConfigs);
+
+// ================= TABS =================
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    $('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// ================= MODAL: ADD =================
+function openAddModal() {
+  $('add-modal').classList.add('show');
+  $('f-remark').value = '';
+  $('f-port').value = 443;
+  $('f-traffic').value = 0;
+  $('f-days').value = 0;
+  $('f-protocol').value = 'vless';
+}
+function closeAddModal() { $('add-modal').classList.remove('show'); }
+$('open-add-modal').addEventListener('click', openAddModal);
+$('close-add-modal').addEventListener('click', closeAddModal);
+$('cancel-add').addEventListener('click', closeAddModal);
+
+// ================= CREATE INBOUND =================
+$('submit-add').addEventListener('click', async () => {
   const remark = $('f-remark').value.trim();
-  const protocol = $('f-protocol').value;
-  const port = parseInt($('f-port').value);
-  const volume = parseInt($('f-volume').value) || 0;
-  const days = parseInt($('f-days').value) || 0;
+  if (!remark) { showToast('Remark is required'); return; }
 
-  if (!remark) return;
-
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> در حال ساخت...';
-  addLog('info', `در حال ایجاد اینباند "${remark}" [${protocol}:${port}]`);
-
-  await sleep(600 + Math.random() * 400);
-
-  // انتخاب یک کانفیگ از pool
   if (configPool.length === 0) {
     configPool = [...configs];
-    if (configPool.length === 0) {
-      addLog('error', 'هیچ کانفیگی برای تخصیص موجود نیست');
-      btn.disabled = false;
-      btn.textContent = '➕ ساخت اینباند';
-      return;
-    }
+    if (configPool.length === 0) { showToast('No configs available'); return; }
   }
-  const cfg = configPool.shift();
 
-  const inbound = {
+  const cfg = configPool.shift();
+  const protocol = $('f-protocol').value;
+  const port = parseInt($('f-port').value) || 443;
+  const traffic = parseInt($('f-traffic').value) || 0;
+  const days = parseInt($('f-days').value) || 0;
+
+  const ib = {
     id: 'ib_' + Math.random().toString(36).slice(2, 10),
     remark,
     protocol,
     port,
-    volume,
+    traffic,
     days,
     config: cfg,
     active: true,
+    usedTraffic: 0,
     createdAt: Date.now(),
-    traffic: 0,
+    uuid: genUUID(),
   };
 
-  inbounds.push(inbound);
-  addLog('success', `اینباند "${remark}" ساخته شد (UUID: ${inbound.id.slice(3, 11)})`);
-
-  renderInbounds();
+  inbounds.push(ib);
+  addLog('ok', `Inbound "${remark}" created [${protocol}:${port}]`);
+  renderTable();
   updateStats();
-  inboundForm.reset();
-  $('f-port').value = 443;
-  $('f-volume').value = 0;
-  $('f-days').value = 0;
-
-  btn.disabled = false;
-  btn.textContent = '➕ ساخت اینباند';
-  showToast('اینباند با موفقیت ساخته شد');
+  closeAddModal();
+  showToast('Inbound created');
 });
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-// ============ Render Inbounds ============
-function renderInbounds() {
-  if (inbounds.length === 0) {
-    inboundList.innerHTML = '<div class="empty-state">هنوز اینباندی ساخته نشده است</div>';
-    return;
-  }
-  inboundList.innerHTML = '';
-  inbounds.forEach((ib, i) => {
-    const el = document.createElement('div');
-    el.className = 'inbound-item';
-    el.innerHTML = `
-      <div class="inbound-header">
-        <div class="inbound-title">
-          ${ib.protocol.toUpperCase()} · ${escapeHtml(ib.remark)}
-          <span class="badge ${ib.active ? 'active' : 'inactive'}">${ib.active ? 'فعال' : 'غیرفعال'}</span>
-        </div>
-        <div class="inbound-meta">
-          <span>پورت: <b>${ib.port}</b></span>
-          <span>UUID: <b>${ib.id.slice(3, 11)}</b></span>
-        </div>
-      </div>
-      <div class="inbound-meta">
-        <span>حجم: <b>${ib.volume === 0 ? '∞' : ib.volume + ' GB'}</b></span>
-        <span>مدت: <b>${ib.days === 0 ? '∞' : ib.days + ' روز'}</b></span>
-        <span>مصرف: <b>${(ib.traffic / 1024).toFixed(2)} GB</b></span>
-      </div>
-      <div class="inbound-actions">
-        <button data-act="show" data-i="${i}">🔗 نمایش کانفیگ</button>
-        <button data-act="copy" data-i="${i}">📋 کپی</button>
-        <button data-act="toggle" data-i="${i}">${ib.active ? '⏸ غیرفعال' : '▶ فعال'}</button>
-        <button data-act="delete" data-i="${i}">🗑 حذف</button>
-      </div>
-      <div class="config-output" id="output-${i}">
-        <div class="row">
-          <code>${escapeHtml(ib.config)}</code>
-          <button class="mini-btn" data-act="copy-inner" data-i="${i}">کپی</button>
-        </div>
-      </div>
-    `;
-    inboundList.appendChild(el);
-  });
-
-  inboundList.querySelectorAll('button[data-act]').forEach(btn => {
-    btn.addEventListener('click', handleAction);
+function genUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
   });
 }
 
-function handleAction(e) {
-  const act = e.target.dataset.act;
-  const i = parseInt(e.target.dataset.i);
+// ================= RENDER TABLE =================
+function renderTable(filter = '') {
+  const tbody = $('inbound-tbody');
+  const q = filter.toLowerCase();
+  const list = inbounds.filter(ib => !q || ib.remark.toLowerCase().includes(q));
+
+  if (list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-row">No inbounds found.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = '';
+  list.forEach((ib, i) => {
+    const idx = inbounds.indexOf(ib);
+    const tr = document.createElement('tr');
+    const trafficStr = ib.traffic === 0 ? '∞' : ib.traffic + ' GB';
+    const expiryStr = ib.days === 0 ? 'Never' : ib.days + 'd';
+    tr.innerHTML = `
+      <td style="color:#fff;font-weight:500">${escapeHtml(ib.remark)}</td>
+      <td><span class="proto-badge ${ib.protocol}">${ib.protocol.toUpperCase()}</span></td>
+      <td style="font-family:monospace">${ib.port}</td>
+      <td>${trafficStr}</td>
+      <td>${expiryStr}</td>
+      <td><span class="status-dot ${ib.active ? 'on' : 'off'}"></span>${ib.active ? 'Active' : 'Disabled'}</td>
+      <td>
+        <div class="row-actions">
+          <button class="btn sm" data-act="show" data-i="${idx}" title="Show Config">🔗</button>
+          <button class="btn sm" data-act="toggle" data-i="${idx}" title="Toggle">${ib.active ? '⏸' : '▶'}</button>
+          <button class="btn sm danger" data-act="del" data-i="${idx}" title="Delete">🗑</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  tbody.querySelectorAll('button[data-act]').forEach(btn => {
+    btn.addEventListener('click', handleRowAction);
+  });
+}
+
+function handleRowAction(e) {
+  const btn = e.currentTarget;
+  const act = btn.dataset.act;
+  const i = parseInt(btn.dataset.i);
   const ib = inbounds[i];
   if (!ib) return;
 
   if (act === 'show') {
-    const out = $('output-' + i);
-    out.classList.toggle('show');
-    if (out.classList.contains('show')) addLog('info', `نمایش کانفیگ برای "${ib.remark}"`);
-  } else if (act === 'copy' || act === 'copy-inner') {
-    copyText(ib.config).then(ok => {
-      if (ok) {
-        showToast('کانفیگ کپی شد');
-        addLog('success', `کانفیگ "${ib.remark}" کپی شد`);
-      } else {
-        showToast('کپی ناموفق');
-        addLog('error', 'کپی ناموفق بود');
-      }
-    });
+    openConfigModal(ib);
   } else if (act === 'toggle') {
     ib.active = !ib.active;
-    addLog('warn', `اینباند "${ib.remark}" ${ib.active ? 'فعال' : 'غیرفعال'} شد`);
-    renderInbounds();
+    addLog(ib.active ? 'ok' : 'info', `Inbound "${ib.remark}" ${ib.active ? 'enabled' : 'disabled'}`);
+    renderTable($('search-input').value);
     updateStats();
-  } else if (act === 'delete') {
-    if (!confirm(`اینباند "${ib.remark}" حذف شود؟`)) return;
-    // برگرداندن کانفیگ به pool
+  } else if (act === 'del') {
+    if (!confirm(`Delete inbound "${ib.remark}"?`)) return;
     configPool.push(ib.config);
     inbounds.splice(i, 1);
-    addLog('error', `اینباند "${ib.remark}" حذف شد`);
-    renderInbounds();
+    addLog('err', `Inbound "${ib.remark}" deleted`);
+    renderTable($('search-input').value);
     updateStats();
-    showToast('اینباند حذف شد');
+    showToast('Inbound deleted');
   }
 }
 
-// ============ Copy ============
+// ================= CONFIG MODAL =================
+let currentConfigIb = null;
+function openConfigModal(ib) {
+  currentConfigIb = ib;
+  $('config-modal-title').textContent = ib.remark + ' · ' + ib.protocol.toUpperCase() + ':' + ib.port;
+
+  const box = $('config-box');
+  box.innerHTML = `
+    <div class="line">
+      <code>${escapeHtml(ib.config)}</code>
+      <button class="copy-mini" id="copy-main">Copy</button>
+    </div>
+    <div class="line">
+      <code>UUID: ${ib.uuid}</code>
+      <button class="copy-mini" id="copy-uuid">Copy</button>
+    </div>
+  `;
+  $('copy-main').addEventListener('click', () => copyText(ib.config));
+  $('copy-uuid').addEventListener('click', () => copyText(ib.uuid));
+
+  drawQR(ib.config);
+  $('config-modal').classList.add('show');
+}
+
+$('close-config-modal').addEventListener('click', () => $('config-modal').classList.remove('show'));
+$('close-config-btn').addEventListener('click', () => $('config-modal').classList.remove('show'));
+
+// ================= QR (simple canvas generator) =================
+function drawQR(text) {
+  const canvas = $('qr-canvas');
+  const ctx = canvas.getContext('2d');
+  const size = 200;
+  canvas.width = size;
+  canvas.height = size;
+
+  // Simple deterministic pattern based on text hash (NOT a real QR code)
+  // For real QR, you'd include a QR library, but this is a visual placeholder
+  let hash = 0;
+  for (let i = 0; i < text.length; i++) {
+    hash = ((hash << 5) - hash) + text.charCodeAt(i);
+    hash |= 0;
+  }
+  const cells = 21;
+  const cellSize = size / cells;
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, size, size);
+  ctx.fillStyle = '#000';
+
+  // Finder patterns
+  function finder(x, y) {
+    for (let i = 0; i < 7; i++) {
+      ctx.fillRect((x + i) * cellSize, y * cellSize, cellSize, cellSize);
+      ctx.fillRect(x * cellSize, (y + i) * cellSize, cellSize, cellSize);
+    }
+    ctx.fillStyle = '#fff';
+    for (let i = 1; i < 6; i++) {
+      ctx.fillRect((x + i) * cellSize, (y + 1) * cellSize, cellSize, cellSize * 5);
+    }
+    ctx.fillStyle = '#000';
+    for (let i = 2; i < 5; i++) {
+      for (let j = 2; j < 5; j++) {
+        ctx.fillRect((x + i) * cellSize, (y + j) * cellSize, cellSize, cellSize);
+      }
+    }
+  }
+  finder(0, 0); finder(cells - 7, 0); finder(0, cells - 7);
+
+  // Random-ish modules
+  let seed = Math.abs(hash) || 1;
+  function rand() {
+    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+    return seed / 0x7fffffff;
+  }
+  for (let y = 0; y < cells; y++) {
+    for (let x = 0; x < cells; x++) {
+      if (isFinderZone(x, y, cells)) continue;
+      if (rand() > 0.5) {
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+      }
+    }
+  }
+}
+
+function isFinderZone(x, y, cells) {
+  return (x < 8 && y < 8) || (x >= cells - 8 && y < 8) || (x < 8 && y >= cells - 8);
+}
+
+// ================= COPY =================
 async function copyText(text) {
   try {
     if (navigator.clipboard && window.isSecureContext) {
       await navigator.clipboard.writeText(text);
-      return true;
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
     }
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    const ok = document.execCommand('copy');
-    document.body.removeChild(ta);
-    return ok;
-  } catch { return false; }
+    showToast('Copied to clipboard');
+    addLog('ok', 'Config copied to clipboard');
+  } catch { showToast('Copy failed'); }
 }
 
-// ============ Stats ============
+// ================= STATS =================
 function updateStats() {
-  const active = inbounds.filter(i => i.active).length;
-  $('stat-active').textContent = active;
-  $('stat-total').textContent = inbounds.length;
-  // شبیه‌سازی پهنای باند
-  const bw = (inbounds.length * 0.37 + Math.random() * 0.5).toFixed(2);
-  $('stat-bw').textContent = bw + ' GB';
+  $('s-active').textContent = inbounds.filter(i => i.active).length;
+  $('s-total').textContent = inbounds.length;
+  const bw = (inbounds.length * 0.37 + Math.random() * 0.3).toFixed(2);
+  $('s-traffic').textContent = bw + ' GB';
 }
 
-// شبیه‌سازی مصرف زنده
+// live traffic simulation
 setInterval(() => {
   if (!isLoggedIn() || inbounds.length === 0) return;
-  inbounds.forEach(ib => {
-    if (ib.active) ib.traffic += Math.random() * 1024 * 1024 * 5;
-  });
-  if (document.querySelector('.nav-item.active')?.dataset.page === 'inbounds') {
-    renderInbounds();
-  }
+  inbounds.forEach(ib => { if (ib.active) ib.usedTraffic += Math.random() * 1024 * 1024 * 3; });
   updateStats();
 }, 5000);
 
-// ============ Helpers ============
+// ================= SEARCH =================
+$('search-input').addEventListener('input', e => renderTable(e.target.value));
+
+// ================= HELPERS =================
 function escapeHtml(s) {
-  return String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ============ Init ============
-async function initPanel() {
-  addLog('info', 'پنل راه‌اندازی شد');
-  addLog('info', 'اتصال به سرویس‌دهنده برقرار شد');
+// ================= INIT =================
+async function init() {
+  addLog('info', 'Panel started');
+  addLog('info', 'Connecting to service...');
   await loadConfigs();
+  renderTable();
   updateStats();
 }
 
-$('reload-source').addEventListener('click', loadConfigs);
-
-// ============ Start ============
+// ================= START =================
 if (isLoggedIn()) {
   showScreen('dashboard');
-  initPanel();
+  init();
 } else {
   showScreen('login');
 }
