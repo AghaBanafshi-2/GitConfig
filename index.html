@@ -3,52 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>پنل مدیریت کانفیگ</title>
+<title>3X-UI Panel</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #0f172a;
-  --panel: #1e293b;
-  --panel-2: #334155;
-  --accent: #3b82f6;
-  --accent-hover: #2563eb;
-  --text: #e2e8f0;
-  --muted: #94a3b8;
-  --border: #475569;
+  --bg: #0b1220;
+  --sidebar: #111a2e;
+  --panel: #16213a;
+  --panel-2: #1e2b48;
+  --accent: #2f6bff;
+  --accent-hover: #1f56e0;
+  --text: #e6edf7;
+  --muted: #8595b0;
+  --border: #24344f;
   --danger: #ef4444;
   --success: #22c55e;
+  --warn: #f59e0b;
 }
 body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 .screen { display: none; }
 .screen.active { display: block; }
 
-/* ---------- Login ---------- */
+/* ================= LOGIN ================= */
 #login-screen {
   min-height: 100vh;
   display: none;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+  background: radial-gradient(circle at top, #16213a 0%, #0b1220 70%);
 }
 #login-screen.active { display: flex; }
 .login-box {
   background: var(--panel);
-  padding: 40px 32px;
-  border-radius: 16px;
+  padding: 38px 32px;
+  border-radius: 14px;
   width: 100%;
-  max-width: 360px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  max-width: 380px;
   border: 1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
   text-align: center;
 }
-.login-box .logo { font-size: 48px; margin-bottom: 12px; }
-.login-box h1 { font-size: 22px; margin-bottom: 6px; }
-.login-box .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+.login-box .logo {
+  font-size: 42px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 0 12px var(--accent));
+}
+.login-box h1 { font-size: 20px; margin-bottom: 4px; letter-spacing: 0.5px; }
+.login-box .subtitle { color: var(--muted); font-size: 12.5px; margin-bottom: 26px; }
 .login-box input {
   width: 100%;
   padding: 12px 14px;
@@ -56,12 +63,15 @@ body {
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text);
-  font-size: 15px;
+  font-size: 14px;
   margin-bottom: 12px;
   outline: none;
-  transition: border 0.2s;
+  transition: border 0.2s, box-shadow 0.2s;
 }
-.login-box input:focus { border-color: var(--accent); }
+.login-box input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(47,107,255,0.15);
+}
 .login-box button {
   width: 100%;
   padding: 12px;
@@ -69,7 +79,7 @@ body {
   border-radius: 8px;
   background: var(--accent);
   color: #fff;
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
@@ -77,139 +87,381 @@ body {
 .login-box button:hover { background: var(--accent-hover); }
 .error-msg {
   color: var(--danger);
-  font-size: 13px;
+  font-size: 12.5px;
   margin-top: 10px;
-  min-height: 18px;
+  min-height: 16px;
 }
 
-/* ---------- Dashboard ---------- */
-.topbar {
+/* ================= LAYOUT ================= */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: var(--sidebar);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 18px 12px;
+  flex-shrink: 0;
+}
+.sidebar .brand {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 14px 24px;
-  background: var(--panel);
+  gap: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 6px 8px 18px;
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  margin-bottom: 14px;
 }
-.brand { font-weight: 700; font-size: 17px; }
-.logout-btn {
+.sidebar .brand .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+}
+.nav-item:hover { background: var(--panel-2); color: var(--text); }
+.nav-item.active {
+  background: rgba(47,107,255,0.12);
+  color: var(--accent);
+  border-color: rgba(47,107,255,0.3);
+}
+.sidebar .spacer { flex: 1; }
+.sidebar .logout-btn {
   background: transparent;
   border: 1px solid var(--danger);
   color: var(--danger);
-  padding: 6px 14px;
-  border-radius: 6px;
+  padding: 9px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 13px;
   transition: all 0.2s;
 }
-.logout-btn:hover { background: var(--danger); color: #fff; }
+.sidebar .logout-btn:hover { background: var(--danger); color: #fff; }
 
-.container { max-width: 1000px; margin: 0 auto; padding: 24px 16px; }
-.toolbar {
+/* Main */
+.main {
+  flex: 1;
+  padding: 22px 26px;
+  overflow-x: hidden;
+}
+.page-header {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
   flex-wrap: wrap;
   gap: 10px;
-  align-items: center;
-  background: var(--panel);
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  margin-bottom: 16px;
 }
-.toolbar label { font-size: 14px; color: var(--muted); }
-.toolbar select,
-.toolbar input,
-.toolbar button {
-  padding: 8px 12px;
+.page-header h2 { font-size: 19px; }
+.page-header .sub { color: var(--muted); font-size: 12.5px; margin-top: 3px; }
+
+/* Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.stat-card .label { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+.stat-card .value { font-size: 20px; font-weight: 700; font-family: monospace; }
+.stat-card .value.online { color: var(--success); }
+.stat-card .value.accent { color: var(--accent); }
+
+/* Section */
+.section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+.section-title {
+  font-size: 14.5px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title::before {
+  content: '';
+  width: 3px; height: 14px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* Form */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 12.5px; color: var(--muted); }
+.field input, .field select {
+  padding: 9px 11px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13.5px;
+  outline: none;
+  transition: border 0.2s;
+}
+.field input:focus, .field select:focus { border-color: var(--accent); }
+
+.btn {
+  padding: 9px 18px;
+  border-radius: 7px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn:hover { background: var(--accent-hover); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn.ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn.ghost:hover { background: var(--panel-2); }
+.btn.danger {
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+.btn.danger:hover { background: var(--danger); color: #fff; }
+
+/* Inbound List */
+.inbound-item {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 10px;
+  animation: fadeIn 0.3s;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.inbound-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.inbound-title {
+  font-weight: 600;
+  font-size: 13.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.badge {
+  font-size: 10.5px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.badge.active { background: rgba(34,197,94,0.15); color: var(--success); }
+.badge.inactive { background: rgba(133,149,176,0.15); color: var(--muted); }
+.inbound-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.inbound-meta span b { color: var(--text); font-family: monospace; }
+.inbound-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.inbound-actions button {
+  padding: 6px 12px;
+  font-size: 12px;
   border-radius: 6px;
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text);
-  font-size: 14px;
-  outline: none;
-}
-.toolbar input { flex: 1; min-width: 180px; }
-.toolbar button {
-  background: var(--accent);
-  border-color: var(--accent);
   cursor: pointer;
-  font-weight: 600;
+  transition: all 0.15s;
 }
-.toolbar button:hover { background: var(--accent-hover); }
+.inbound-actions button:hover { border-color: var(--accent); color: var(--accent); }
 
-.status-bar {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 12px;
-  min-height: 18px;
+/* Config output */
+.config-output {
+  margin-top: 10px;
+  background: var(--bg);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  display: none;
 }
-.status-bar.error { color: var(--danger); }
-.status-bar.ok { color: var(--success); }
-
-.config-list { display: flex; flex-direction: column; gap: 10px; }
-.config-item {
+.config-output.show { display: block; animation: fadeIn 0.25s; }
+.config-output .row {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 14px;
-  transition: border 0.2s;
+  gap: 8px;
+  align-items: flex-start;
+  margin-bottom: 8px;
 }
-.config-item:hover { border-color: var(--accent); }
-.config-index {
-  color: var(--muted);
-  font-size: 13px;
-  min-width: 32px;
-  font-family: monospace;
-}
-.config-text {
+.config-output .row:last-child { margin-bottom: 0; }
+.config-output code {
   flex: 1;
   font-family: monospace;
-  font-size: 12.5px;
+  font-size: 11.5px;
   word-break: break-all;
-  color: var(--text);
+  direction: ltr;
+  text-align: left;
+  background: var(--panel);
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  color: #7dd3fc;
+}
+.config-output .mini-btn {
+  padding: 7px 10px;
+  font-size: 11.5px;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+  background: rgba(47,107,255,0.1);
+  color: var(--accent);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.config-output .mini-btn:hover { background: var(--accent); color: #fff; }
+
+/* Log */
+.log-box {
+  background: #060b14;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: monospace;
+  font-size: 11.5px;
+  max-height: 220px;
+  overflow-y: auto;
   direction: ltr;
   text-align: left;
 }
-.copy-btn {
+.log-line { padding: 2px 0; color: var(--muted); }
+.log-line.info { color: #7dd3fc; }
+.log-line.success { color: var(--success); }
+.log-line.error { color: var(--danger); }
+.log-line.warn { color: var(--warn); }
+.log-line .time { color: #4b5c7a; margin-right: 8px; }
+
+/* Toast */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
   background: var(--panel-2);
-  border: 1px solid var(--border);
+  border: 1px solid var(--accent);
   color: var(--text);
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 12px;
-  white-space: nowrap;
-  transition: all 0.2s;
+  padding: 11px 22px;
+  border-radius: 8px;
+  font-size: 13px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 1000;
+  pointer-events: none;
 }
-.copy-btn:hover { background: var(--accent); border-color: var(--accent); }
-.copy-btn.copied { background: var(--success); border-color: var(--success); color: #fff; }
+#toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* Empty */
 .empty-state {
   text-align: center;
   color: var(--muted);
-  padding: 40px 16px;
-  font-size: 14px;
+  padding: 36px 16px;
+  font-size: 13.5px;
 }
-@media (max-width: 600px) {
-  .config-item { flex-wrap: wrap; }
-  .config-text { flex-basis: 100%; order: 3; }
+
+/* Page */
+.page { display: none; }
+.page.active { display: block; }
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 768px) {
+  .app-layout { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px;
+    border-left: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar .brand { border: none; padding: 8px; margin: 0; font-size: 13px; }
+  .nav-item { white-space: nowrap; margin: 0 2px; }
+  .sidebar .spacer, .sidebar .logout-btn { display: none; }
+  .main { padding: 14px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ===== صفحه ورود ===== -->
+<!-- ================= LOGIN ================= -->
 <div id="login-screen" class="screen active">
   <div class="login-box">
-    <div class="logo">🔐</div>
-    <h1>پنل مدیریت</h1>
-    <p class="subtitle">رمز عبور را وارد کنید</p>
+    <div class="logo">🛡️</div>
+    <h1>3X-UI Panel</h1>
+    <p class="subtitle">ورود به پنل مدیریت</p>
     <form id="login-form">
+      <input type="text" id="username-input" placeholder="نام کاربری" value="admin" autocomplete="username" required>
       <input type="password" id="password-input" placeholder="رمز عبور" autocomplete="current-password" required>
       <button type="submit">ورود</button>
       <div id="login-error" class="error-msg"></div>
@@ -217,59 +469,172 @@ body {
   </div>
 </div>
 
-<!-- ===== داشبورد ===== -->
+<!-- ================= DASHBOARD ================= -->
 <div id="dashboard-screen" class="screen">
-  <header class="topbar">
-    <div class="brand">⚡ Config Panel</div>
-    <button id="logout-btn" class="logout-btn">خروج</button>
-  </header>
+  <div class="app-layout">
 
-  <main class="container">
-    <div class="toolbar">
-      <label for="country-select">کشور:</label>
-      <select id="country-select">
-        <option value="">-- انتخاب --</option>
-        <option value="NL">🇳🇱 هلند</option>
-        <option value="DE">🇩🇪 آلمان</option>
-        <option value="US">🇺🇸 آمریکا</option>
-        <option value="FR">🇫🇷 فرانسه</option>
-        <option value="TR">🇹🇷 ترکیه</option>
-      </select>
-      <button id="reload-btn">🔄 بارگذاری</button>
-      <input type="text" id="search-input" placeholder="جستجو در کانفیگ‌ها...">
-    </div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="dot"></span>
+        <span>3X-UI</span>
+      </div>
+      <div class="nav-item active" data-page="inbounds">📡 اینباندها</div>
+      <div class="nav-item" data-page="settings">⚙️ تنظیمات</div>
+      <div class="nav-item" data-page="logs">📋 لاگ‌ها</div>
+      <div class="spacer"></div>
+      <button class="logout-btn" id="logout-btn">خروج</button>
+    </aside>
 
-    <div id="status-bar" class="status-bar"></div>
-    <div id="config-list" class="config-list">
-      <div class="empty-state">برای شروع یک کشور انتخاب کنید</div>
-    </div>
-  </main>
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Page: Inbounds -->
+      <div class="page active" id="page-inbounds">
+        <div class="page-header">
+          <div>
+            <h2>مدیریت اینباندها</h2>
+            <div class="sub">ساخت و مدیریت کانفیگ‌های اتصال</div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="label">وضعیت پنل</div>
+            <div class="value online">آنلاین</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">کاربران فعال</div>
+            <div class="value accent" id="stat-active">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">کل کانفیگ‌ها</div>
+            <div class="value" id="stat-total">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">پهنای باند امروز</div>
+            <div class="value" id="stat-bw">0 GB</div>
+          </div>
+        </div>
+
+        <!-- New Inbound -->
+        <div class="section">
+          <div class="section-title">ساخت اینباند جدید</div>
+          <form id="inbound-form">
+            <div class="form-row">
+              <div class="field">
+                <label>نام اینباند</label>
+                <input type="text" id="f-remark" placeholder="مثال: user-01" required>
+              </div>
+              <div class="field">
+                <label>پروتکل</label>
+                <select id="f-protocol">
+                  <option value="vless">VLESS</option>
+                  <option value="vmess">VMess</option>
+                  <option value="trojan">Trojan</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>پورت</label>
+                <input type="number" id="f-port" value="443" min="1" max="65535" required>
+              </div>
+              <div class="field">
+                <label>حجم (GB)</label>
+                <input type="number" id="f-volume" value="0" min="0" step="1">
+              </div>
+              <div class="field">
+                <label>مدت (روز)</label>
+                <input type="number" id="f-days" value="0" min="0" step="1">
+              </div>
+            </div>
+            <button type="submit" class="btn" id="create-btn">➕ ساخت اینباند</button>
+          </form>
+        </div>
+
+        <!-- Inbound List -->
+        <div class="section">
+          <div class="section-title">اینباندهای موجود</div>
+          <div id="inbound-list">
+            <div class="empty-state">هنوز اینباندی ساخته نشده است</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page: Settings -->
+      <div class="page" id="page-settings">
+        <div class="page-header">
+          <div>
+            <h2>تنظیمات پنل</h2>
+            <div class="sub">پیکربندی اتصال به سرویس‌دهنده</div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">منبع کانفیگ</div>
+          <div class="form-row">
+            <div class="field">
+              <label>فایل کانفیگ</label>
+              <input type="text" value="config-NL.txt" readonly>
+            </div>
+            <div class="field">
+              <label>حالت بارگذاری</label>
+              <input type="text" value="خودکار" readonly>
+            </div>
+          </div>
+          <div class="inbound-meta">
+            <span>وضعیت: <b id="source-status">در انتظار</b></span>
+            <span>تعداد: <b id="source-count">0</b></span>
+          </div>
+          <button class="btn ghost" id="reload-source">🔄 بارگذاری مجدد</button>
+        </div>
+      </div>
+
+      <!-- Page: Logs -->
+      <div class="page" id="page-logs">
+        <div class="page-header">
+          <div>
+            <h2>لاگ‌های سیستم</h2>
+            <div class="sub">رویدادهای زنده پنل</div>
+          </div>
+          <button class="btn ghost" id="clear-logs">پاک کردن</button>
+        </div>
+        <div class="section">
+          <div class="log-box" id="log-box"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
 </div>
 
+<div id="toast"></div>
+
 <script>
-// ================= تنظیمات =================
-const DEFAULT_PASSWORD = 'admin';   // 🔑 رمز پیش‌فرض را اینجا عوض کن
+// ============ تنظیمات ============
+const DEFAULT_USER = 'admin';
+const DEFAULT_PASS = 'admin';
 const STORAGE_KEY = 'panel_auth';
+const CONFIG_FILE = 'config-NL.txt';   // 👈 همیشه از این فایل خوانده می‌شود
 
-// ================= عناصر =================
-const loginScreen = document.getElementById('login-screen');
-const dashboardScreen = document.getElementById('dashboard-screen');
-const loginForm = document.getElementById('login-form');
-const passwordInput = document.getElementById('password-input');
-const loginError = document.getElementById('login-error');
-const logoutBtn = document.getElementById('logout-btn');
-const countrySelect = document.getElementById('country-select');
-const reloadBtn = document.getElementById('reload-btn');
-const searchInput = document.getElementById('search-input');
-const statusBar = document.getElementById('status-bar');
-const configList = document.getElementById('config-list');
+// ============ State ============
+let configs = [];          // کانفیگ‌های خام از فایل
+let inbounds = [];         // اینباندهای ساخته‌شده
+let configPool = [];       // کانفیگ‌های آماده مصرف
 
-let allConfigs = [];
+// ============ DOM ============
+const $ = id => document.getElementById(id);
+const loginScreen = $('login-screen');
+const dashboardScreen = $('dashboard-screen');
+const loginForm = $('login-form');
+const loginError = $('login-error');
+const inboundForm = $('inbound-form');
+const inboundList = $('inbound-list');
+const logBox = $('log-box');
+const toast = $('toast');
 
-// ================= احراز هویت =================
-function isLoggedIn() {
-  return sessionStorage.getItem(STORAGE_KEY) === '1';
-}
+// ============ Auth ============
+function isLoggedIn() { return sessionStorage.getItem(STORAGE_KEY) === '1'; }
+
 function showScreen(name) {
   loginScreen.classList.remove('active');
   dashboardScreen.classList.remove('active');
@@ -277,151 +642,295 @@ function showScreen(name) {
   else dashboardScreen.classList.add('active');
 }
 
-loginForm.addEventListener('submit', (e) => {
+loginForm.addEventListener('submit', e => {
   e.preventDefault();
-  const pass = passwordInput.value;
-  if (pass === DEFAULT_PASSWORD) {
+  const u = $('username-input').value.trim();
+  const p = $('password-input').value;
+  if (u === DEFAULT_USER && p === DEFAULT_PASS) {
     sessionStorage.setItem(STORAGE_KEY, '1');
-    passwordInput.value = '';
     loginError.textContent = '';
     showScreen('dashboard');
-    if (countrySelect.value) loadConfigs(countrySelect.value);
+    initPanel();
   } else {
-    loginError.textContent = 'رمز عبور اشتباه است';
+    loginError.textContent = 'نام کاربری یا رمز عبور اشتباه است';
+    addLog('error', 'تلاش ناموفق برای ورود');
   }
 });
 
-logoutBtn.addEventListener('click', () => {
+$('logout-btn').addEventListener('click', () => {
   sessionStorage.removeItem(STORAGE_KEY);
   showScreen('login');
-  allConfigs = [];
-  configList.innerHTML = '<div class="empty-state">برای شروع یک کشور انتخاب کنید</div>';
-  countrySelect.value = '';
-  searchInput.value = '';
-  statusBar.textContent = '';
+  addLog('info', 'کاربر خارج شد');
 });
 
-// ================= بارگذاری کانفیگ‌ها =================
-async function loadConfigs(country) {
-  setStatus('در حال بارگذاری...');
-  configList.innerHTML = '';
-  allConfigs = [];
+// ============ Navigation ============
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+    const page = item.dataset.page;
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    $('page-' + page).classList.add('active');
+  });
+});
 
-  const fileName = `config-${country}.txt`;
+// ============ Log ============
+function addLog(type, msg) {
+  const time = new Date().toLocaleTimeString('en-GB');
+  const line = document.createElement('div');
+  line.className = 'log-line ' + type;
+  line.innerHTML = `<span class="time">[${time}]</span>${msg}`;
+  logBox.appendChild(line);
+  logBox.scrollTop = logBox.scrollHeight;
+  while (logBox.children.length > 200) logBox.removeChild(logBox.firstChild);
+}
+
+$('clear-logs').addEventListener('click', () => {
+  logBox.innerHTML = '';
+  addLog('info', 'لاگ‌ها پاک شدند');
+});
+
+// ============ Toast ============
+let toastTimer;
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// ============ Load Configs ============
+async function loadConfigs() {
+  addLog('info', `دریافت کانفیگ از ${CONFIG_FILE}...`);
+  $('source-status').textContent = 'در حال بارگذاری';
   try {
-    const res = await fetch(fileName, { cache: 'no-store' });
-    if (!res.ok) throw new Error(`فایل ${fileName} پیدا نشد (کد ${res.status})`);
+    const res = await fetch(CONFIG_FILE + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     const text = await res.text();
-
-    allConfigs = text
+    configs = text
       .split(/\r?\n/)
       .map(l => l.trim())
-      .filter(l => l.length > 0 && !l.startsWith('#'));
+      .filter(l => l && !l.startsWith('#'));
+    configPool = [...configs];
+    if (configs.length === 0) throw new Error('فایل خالی است');
+    addLog('success', `${configs.length} کانفیگ با موفقیت بارگذاری شد`);
+    $('source-status').textContent = 'آماده';
+    $('source-count').textContent = configs.length;
+    updateStats();
+  } catch (err) {
+    addLog('error', 'خطا در بارگذاری: ' + err.message);
+    $('source-status').textContent = 'خطا';
+    $('source-count').textContent = '0';
+    showToast('خطا در دریافت کانفیگ‌ها');
+  }
+}
 
-    if (allConfigs.length === 0) {
-      setStatus('این فایل خالی است.', 'error');
-      configList.innerHTML = '<div class="empty-state">هیچ کانفیگی در فایل نیست</div>';
+// ============ Create Inbound ============
+inboundForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('create-btn');
+  const remark = $('f-remark').value.trim();
+  const protocol = $('f-protocol').value;
+  const port = parseInt($('f-port').value);
+  const volume = parseInt($('f-volume').value) || 0;
+  const days = parseInt($('f-days').value) || 0;
+
+  if (!remark) return;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> در حال ساخت...';
+  addLog('info', `در حال ایجاد اینباند "${remark}" [${protocol}:${port}]`);
+
+  await sleep(600 + Math.random() * 400);
+
+  // انتخاب یک کانفیگ از pool
+  if (configPool.length === 0) {
+    configPool = [...configs];
+    if (configPool.length === 0) {
+      addLog('error', 'هیچ کانفیگی برای تخصیص موجود نیست');
+      btn.disabled = false;
+      btn.textContent = '➕ ساخت اینباند';
       return;
     }
-
-    setStatus(`✅ ${allConfigs.length} کانفیگ بارگذاری شد`, 'ok');
-    renderConfigs(allConfigs);
-  } catch (err) {
-    console.error(err);
-    setStatus('❌ ' + err.message, 'error');
-    configList.innerHTML = '<div class="empty-state">خطا در بارگذاری فایل</div>';
   }
-}
+  const cfg = configPool.shift();
 
-function setStatus(msg, type = '') {
-  statusBar.textContent = msg;
-  statusBar.className = 'status-bar' + (type ? ' ' + type : '');
-}
+  const inbound = {
+    id: 'ib_' + Math.random().toString(36).slice(2, 10),
+    remark,
+    protocol,
+    port,
+    volume,
+    days,
+    config: cfg,
+    active: true,
+    createdAt: Date.now(),
+    traffic: 0,
+  };
 
-// ================= رندر لیست =================
-function renderConfigs(configs) {
-  configList.innerHTML = '';
-  if (configs.length === 0) {
-    configList.innerHTML = '<div class="empty-state">نتیجه‌ای یافت نشد</div>';
+  inbounds.push(inbound);
+  addLog('success', `اینباند "${remark}" ساخته شد (UUID: ${inbound.id.slice(3, 11)})`);
+
+  renderInbounds();
+  updateStats();
+  inboundForm.reset();
+  $('f-port').value = 443;
+  $('f-volume').value = 0;
+  $('f-days').value = 0;
+
+  btn.disabled = false;
+  btn.textContent = '➕ ساخت اینباند';
+  showToast('اینباند با موفقیت ساخته شد');
+});
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ============ Render Inbounds ============
+function renderInbounds() {
+  if (inbounds.length === 0) {
+    inboundList.innerHTML = '<div class="empty-state">هنوز اینباندی ساخته نشده است</div>';
     return;
   }
-
-  const fragment = document.createDocumentFragment();
-  configs.forEach((cfg, i) => {
-    const item = document.createElement('div');
-    item.className = 'config-item';
-
-    const idx = document.createElement('div');
-    idx.className = 'config-index';
-    idx.textContent = `#${i + 1}`;
-
-    const txt = document.createElement('div');
-    txt.className = 'config-text';
-    txt.textContent = cfg;
-
-    const btn = document.createElement('button');
-    btn.className = 'copy-btn';
-    btn.textContent = '📋 کپی';
-    btn.addEventListener('click', () => copyConfig(cfg, btn));
-
-    item.appendChild(idx);
-    item.appendChild(txt);
-    item.appendChild(btn);
-    fragment.appendChild(item);
+  inboundList.innerHTML = '';
+  inbounds.forEach((ib, i) => {
+    const el = document.createElement('div');
+    el.className = 'inbound-item';
+    el.innerHTML = `
+      <div class="inbound-header">
+        <div class="inbound-title">
+          ${ib.protocol.toUpperCase()} · ${escapeHtml(ib.remark)}
+          <span class="badge ${ib.active ? 'active' : 'inactive'}">${ib.active ? 'فعال' : 'غیرفعال'}</span>
+        </div>
+        <div class="inbound-meta">
+          <span>پورت: <b>${ib.port}</b></span>
+          <span>UUID: <b>${ib.id.slice(3, 11)}</b></span>
+        </div>
+      </div>
+      <div class="inbound-meta">
+        <span>حجم: <b>${ib.volume === 0 ? '∞' : ib.volume + ' GB'}</b></span>
+        <span>مدت: <b>${ib.days === 0 ? '∞' : ib.days + ' روز'}</b></span>
+        <span>مصرف: <b>${(ib.traffic / 1024).toFixed(2)} GB</b></span>
+      </div>
+      <div class="inbound-actions">
+        <button data-act="show" data-i="${i}">🔗 نمایش کانفیگ</button>
+        <button data-act="copy" data-i="${i}">📋 کپی</button>
+        <button data-act="toggle" data-i="${i}">${ib.active ? '⏸ غیرفعال' : '▶ فعال'}</button>
+        <button data-act="delete" data-i="${i}">🗑 حذف</button>
+      </div>
+      <div class="config-output" id="output-${i}">
+        <div class="row">
+          <code>${escapeHtml(ib.config)}</code>
+          <button class="mini-btn" data-act="copy-inner" data-i="${i}">کپی</button>
+        </div>
+      </div>
+    `;
+    inboundList.appendChild(el);
   });
-  configList.appendChild(fragment);
+
+  inboundList.querySelectorAll('button[data-act]').forEach(btn => {
+    btn.addEventListener('click', handleAction);
+  });
 }
 
-// ================= کپی =================
-async function copyConfig(text, btn) {
+function handleAction(e) {
+  const act = e.target.dataset.act;
+  const i = parseInt(e.target.dataset.i);
+  const ib = inbounds[i];
+  if (!ib) return;
+
+  if (act === 'show') {
+    const out = $('output-' + i);
+    out.classList.toggle('show');
+    if (out.classList.contains('show')) addLog('info', `نمایش کانفیگ برای "${ib.remark}"`);
+  } else if (act === 'copy' || act === 'copy-inner') {
+    copyText(ib.config).then(ok => {
+      if (ok) {
+        showToast('کانفیگ کپی شد');
+        addLog('success', `کانفیگ "${ib.remark}" کپی شد`);
+      } else {
+        showToast('کپی ناموفق');
+        addLog('error', 'کپی ناموفق بود');
+      }
+    });
+  } else if (act === 'toggle') {
+    ib.active = !ib.active;
+    addLog('warn', `اینباند "${ib.remark}" ${ib.active ? 'فعال' : 'غیرفعال'} شد`);
+    renderInbounds();
+    updateStats();
+  } else if (act === 'delete') {
+    if (!confirm(`اینباند "${ib.remark}" حذف شود؟`)) return;
+    // برگرداندن کانفیگ به pool
+    configPool.push(ib.config);
+    inbounds.splice(i, 1);
+    addLog('error', `اینباند "${ib.remark}" حذف شد`);
+    renderInbounds();
+    updateStats();
+    showToast('اینباند حذف شد');
+  }
+}
+
+// ============ Copy ============
+async function copyText(text) {
   try {
     if (navigator.clipboard && window.isSecureContext) {
       await navigator.clipboard.writeText(text);
-    } else {
-      // fallback برای http یا مرورگرهای قدیمی
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
+      return true;
     }
-    const original = btn.textContent;
-    btn.textContent = '✅ کپی شد';
-    btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = original;
-      btn.classList.remove('copied');
-    }, 1500);
-  } catch (e) {
-    btn.textContent = '❌ خطا';
-    setTimeout(() => (btn.textContent = '📋 کپی'), 1500);
-  }
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch { return false; }
 }
 
-// ================= رویدادها =================
-countrySelect.addEventListener('change', () => {
-  if (countrySelect.value) loadConfigs(countrySelect.value);
-});
+// ============ Stats ============
+function updateStats() {
+  const active = inbounds.filter(i => i.active).length;
+  $('stat-active').textContent = active;
+  $('stat-total').textContent = inbounds.length;
+  // شبیه‌سازی پهنای باند
+  const bw = (inbounds.length * 0.37 + Math.random() * 0.5).toFixed(2);
+  $('stat-bw').textContent = bw + ' GB';
+}
 
-reloadBtn.addEventListener('click', () => {
-  if (countrySelect.value) loadConfigs(countrySelect.value);
-  else setStatus('اول یک کشور انتخاب کن', 'error');
-});
+// شبیه‌سازی مصرف زنده
+setInterval(() => {
+  if (!isLoggedIn() || inbounds.length === 0) return;
+  inbounds.forEach(ib => {
+    if (ib.active) ib.traffic += Math.random() * 1024 * 1024 * 5;
+  });
+  if (document.querySelector('.nav-item.active')?.dataset.page === 'inbounds') {
+    renderInbounds();
+  }
+  updateStats();
+}, 5000);
 
-searchInput.addEventListener('input', () => {
-  const q = searchInput.value.trim().toLowerCase();
-  if (!q) { renderConfigs(allConfigs); return; }
-  const filtered = allConfigs.filter(c => c.toLowerCase().includes(q));
-  renderConfigs(filtered);
-});
+// ============ Helpers ============
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
-// ================= شروع =================
+// ============ Init ============
+async function initPanel() {
+  addLog('info', 'پنل راه‌اندازی شد');
+  addLog('info', 'اتصال به سرویس‌دهنده برقرار شد');
+  await loadConfigs();
+  updateStats();
+}
+
+$('reload-source').addEventListener('click', loadConfigs);
+
+// ============ Start ============
 if (isLoggedIn()) {
   showScreen('dashboard');
-  if (countrySelect.value) loadConfigs(countrySelect.value);
+  initPanel();
 } else {
   showScreen('login');
 }
